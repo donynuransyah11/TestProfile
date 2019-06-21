@@ -17,6 +17,7 @@ import android.arch.lifecycle.ViewModelProviders
 import com.app.wawetech.testgrid.ListImageFragment
 import com.app.wawetech.testgrid.R
 import com.app.wawetech.testgrid.adapter.TagAdapter
+import org.json.JSONObject
 
 
 class MainActivity : AppCompatActivity(), ListImageFragment.SubmitListener {
@@ -62,53 +63,16 @@ class MainActivity : AppCompatActivity(), ListImageFragment.SubmitListener {
          * Observe value yang ada pada ViewModel
          */
         viewModel.allImage.observe(this, android.arch.lifecycle.Observer { response ->
-            list.clear()
-            var jsonarray: JSONArray = response?.getJSONObject("data")?.getJSONArray("tags")!!
-            var data: Int = jsonarray.length() - 100
-            for (i in 1 until data) {
-                list.add(jsonarray.getJSONObject(i).getString("name"))
-            }
-            var tagging = object : TagAdapter.ItemListener {
-                override fun onClick(tag: String) {
-                    showImageBaseOnTag(tag)
-                }
-            }
-            val layoutManager = LinearLayoutManager(this@MainActivity, LinearLayoutManager.HORIZONTAL, false)
-            val taglist = findViewById<RecyclerView>(R.id.listtag)
-            taglist.layoutManager = layoutManager
-            taglist.adapter = TagAdapter(list, tagging)
+            response.processAllImage()
         })
 
         /**
          * Observe value yang ada pada ViewModel
          */
         viewModel.tagImage.observe(this, android.arch.lifecycle.Observer { response ->
-            listImageurl.clear()
-            var jsonarray: JSONArray = response?.getJSONObject("data")?.getJSONArray("items")!!
-            var data: Int = jsonarray.length()
-
-            for (i in 0 until data - 1) {
-                var listimage: JSONArray
-                try {
-                    listimage = jsonarray.getJSONObject(i).getJSONArray("images")
-                } catch (ex: Exception) {
-                    continue
-                }
-                var img = listimage.length()
-                if (listimage != null) {
-                    for (j in 0 until img - 1) {
-                        var link = listimage.getJSONObject(j).getString("link")
-                        if (link.contains(".jpg")) {
-                            listImageurl.add(link)
-                        }
-                    }
-                }
-            }
-
-            onSubmit()
+            response.processTagImage()
         })
     }
-
 
 
     private fun initView() {
@@ -126,7 +90,7 @@ class MainActivity : AppCompatActivity(), ListImageFragment.SubmitListener {
 
 
     /**
-     * Trigger Request API ke VM get list gambar berdasarkan tag
+     * Trigger Request API ke ViewModel get list gambar berdasarkan tag
      */
     fun showImageBaseOnTag(tag: String) {
         viewModel.getImageByTag(tag)
@@ -166,6 +130,64 @@ class MainActivity : AppCompatActivity(), ListImageFragment.SubmitListener {
         }
     }
 
+
+    /**
+     * Kotlin Extension
+     * @receiver JSONObject?
+     */
+    private fun JSONObject?.processAllImage() {
+        this?.let { response ->
+            list.clear()
+            var jsonarray: JSONArray = response.getJSONObject("data")?.getJSONArray("tags")!!
+            var data: Int = jsonarray.length() - 100
+            for (i in 1 until data) {
+                list.add(jsonarray.getJSONObject(i).getString("name"))
+            }
+            var tagging = object : TagAdapter.ItemListener {
+                override fun onClick(tag: String) {
+                    showImageBaseOnTag(tag)
+                }
+            }
+            val layoutManager = LinearLayoutManager(this@MainActivity, LinearLayoutManager.HORIZONTAL, false)
+            val taglist = findViewById<RecyclerView>(R.id.listtag)
+            taglist.layoutManager = layoutManager
+            taglist.adapter = TagAdapter(list, tagging)
+
+        }
+    }
+
+
+    /**
+     * Kotlin extension
+     * @receiver JSONObject?
+     */
+    private fun JSONObject?.processTagImage() {
+        this?.let { response ->
+            listImageurl.clear()
+            var jsonarray: JSONArray = response?.getJSONObject("data")?.getJSONArray("items")!!
+            var data: Int = jsonarray.length()
+
+            for (i in 0 until data - 1) {
+                var listimage: JSONArray
+                try {
+                    listimage = jsonarray.getJSONObject(i).getJSONArray("images")
+                } catch (ex: Exception) {
+                    continue
+                }
+                var img = listimage.length()
+                if (listimage != null) {
+                    for (j in 0 until img - 1) {
+                        var link = listimage.getJSONObject(j).getString("link")
+                        if (link.contains(".jpg")) {
+                            listImageurl.add(link)
+                        }
+                    }
+                }
+            }
+
+            onSubmit()
+        }
+    }
 
 
 }

@@ -10,15 +10,26 @@ import com.androidnetworking.common.ANRequest
  */
 
 class ImageSource {
+
+    /**
+     *
+     * @return ANRequest<out ANRequest<*>>
+     */
     fun getAllImage(): ANRequest<out ANRequest<*>> {
         return AndroidNetworking.get("https://api.imgur.com/3/tags")
             .addHeaders("Authorization", "Client-ID 77d71dc75e9339a")
             .build()
     }
 
+    /**
+     *
+     * @param tag String
+     * @return ANRequest<out ANRequest<*>>
+     */
     fun getImageByTag(tag: String): ANRequest<out ANRequest<*>> {
         return AndroidNetworking.get("https://api.imgur.com/3/gallery/t/$tag")
             .addHeaders("Authorization", "Client-ID 77d71dc75e9339a")
             .build()
     }
+
 }
