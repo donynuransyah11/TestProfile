@@ -27,8 +27,14 @@ class ImageSource {
      * @return ANRequest<out ANRequest<*>>
      */
     fun getImageByTag(tag: String): ANRequest<out ANRequest<*>> {
-        return AndroidNetworking.get("https://api.imgur.com/3/gallery/t/$tag")
+        return AndroidNetworking.get("https://api.imgur.com/3/gallery/t/$tag/perPage=40")
             .addHeaders("Authorization", "Client-ID 77d71dc75e9339a")
+            .build()
+    }
+
+    fun detailImage(id : String): ANRequest<out ANRequest<*>>? {
+        return AndroidNetworking.get("https://api.imgur.com/3/image/$id")
+            .addHeaders("Authorization","Client-ID 77d71dc75e9339a")
             .build()
     }
 

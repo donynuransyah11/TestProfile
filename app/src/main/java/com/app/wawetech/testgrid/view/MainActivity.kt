@@ -10,13 +10,13 @@ import android.support.design.widget.TabLayout
 import org.json.JSONArray
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.LinearLayoutManager
-import com.squareup.picasso.Picasso
 import de.hdodenhof.circleimageview.CircleImageView
 import kotlin.collections.ArrayList
 import android.arch.lifecycle.ViewModelProviders
 import com.app.wawetech.testgrid.ListImageFragment
 import com.app.wawetech.testgrid.R
 import com.app.wawetech.testgrid.adapter.TagAdapter
+import com.bumptech.glide.Glide
 import org.json.JSONObject
 
 
@@ -83,7 +83,7 @@ class MainActivity : AppCompatActivity(), ListImageFragment.SubmitListener {
     }
 
     private fun loadProfileImage() {
-        Picasso.get()
+        Glide.with(this)
             .load("https://st3.depositphotos.com/7863750/17911/i/1600/depositphotos_179111430-stock-photo-bad-cat-stole-bitcoins.jpg")
             .into(imgprofil)
     }

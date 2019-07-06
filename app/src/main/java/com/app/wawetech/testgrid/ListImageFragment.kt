@@ -41,7 +41,7 @@ class ListImageFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         rclistimage = view.findViewById(R.id.listimage)
-        rclistimage.layoutManager = GridLayoutManager(activity!!, 3)
+        rclistimage.layoutManager = GridLayoutManager(activity!!, 2)
     }
 
     // TODO: Rename method, update argument and hook method into UI event

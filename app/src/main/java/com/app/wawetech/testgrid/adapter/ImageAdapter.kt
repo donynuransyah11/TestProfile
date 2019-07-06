@@ -7,12 +7,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
-import com.squareup.picasso.Picasso
 import com.app.wawetech.testgrid.R
+import com.bumptech.glide.Glide
 
-class ImageAdapter(private val listimage: MutableList<String>) : RecyclerView.Adapter<ImageAdapter.FavoritHolder>()  {
+class ImageAdapter(private val listimage: MutableList<String>) : RecyclerView.Adapter<ImageAdapter.FavoritHolder>() {
     override fun onCreateViewHolder(p0: ViewGroup, p1: Int): FavoritHolder {
-        Log.e("adapters",listimage.size.toString())
+        Log.e("adapters", listimage.size.toString())
         return FavoritHolder(
             LayoutInflater.from(p0.context)
                 .inflate(R.layout.row_image, p0, false) as LinearLayout
@@ -28,14 +28,13 @@ class ImageAdapter(private val listimage: MutableList<String>) : RecyclerView.Ad
     }
 
 
-    class FavoritHolder(itemView : View) : RecyclerView.ViewHolder(itemView){
+    class FavoritHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
-        var imageview : ImageView = itemView.findViewById(R.id.imgholder)
+        var imageview: ImageView = itemView.findViewById(R.id.imgholder)
 
-        fun UpdateData(image : String){
-            Picasso.get()
+        fun UpdateData(image: String) {
+            Glide.with(itemView.context)
                 .load(image)
-                .resize(50, 150)
                 .into(imageview)
         }
     }
